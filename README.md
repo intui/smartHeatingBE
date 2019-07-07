@@ -1,2 +1,2 @@
 # smartHeatingBE
-Smart hunderfloor heating project. Backend based relying on Microsoft Azure
+Smart underfloor heating project. Backend based relying on Microsoft Azure
