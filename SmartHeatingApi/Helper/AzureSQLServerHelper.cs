@@ -8,7 +8,7 @@ namespace SmartHeatingApi.Helper
 {
     public class AzureSQLServerHelper
     {
-        public static SqlConnection connection
+        public static SqlConnection Connection
         {
             get
             {

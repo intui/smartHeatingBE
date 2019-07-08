@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Data.SqlClient;
 using System.Text;
+using System.Globalization;
 
 namespace SmartHeatingApi
 {
@@ -16,46 +17,56 @@ namespace SmartHeatingApi
     {
         [FunctionName("ProgramGetActive")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function ProgramGetActive processed a request.");
-
-            string deviceId = req.Query["DeviceId"];
-            string result = string.Empty;
-            if (deviceId != null)
+            try
             {
-                using (SqlConnection connection = Helper.AzureSQLServerHelper.connection)
+                log.LogInformation("C# HTTP trigger function ProgramGetActive processed a request.");
+
+                string deviceId = req.Query["DeviceId"];
+                string result = string.Empty;
+                if (deviceId != null)
                 {
-                    log.LogInformation("\nSQL Query started");
-                    log.LogTrace("sensorId submitted: \n" + deviceId);
-
-                    connection.Open();
-                    StringBuilder sb = new StringBuilder();
-                    //sb.Append("SELECT TOP 1 * ");sb.Append("FROM [Ambiences]");
-                    sb.Append("SELECT TOP 1 ProgramContent FROM Programs WHERE DeviceId = '" + deviceId + "' ORDER BY ValidFrom DESC");
-                    String sql = sb.ToString();
-                    log.LogInformation("trying to execute SQL : " + sql + "\n");
-
-                    log.LogInformation("result: \n");
-                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    using (SqlConnection connection = Helper.AzureSQLServerHelper.Connection)
                     {
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        log.LogInformation("\nSQL Query started");
+                        log.LogTrace("sensorId submitted: \n" + deviceId);
+                        log.LogInformation("Sql connection.DataSource: " + connection?.DataSource);
+
+                        var culture = CultureInfo.CreateSpecificCulture("en-US");
+                        connection.Open();
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append("SELECT TOP 1 ProgramContent FROM Programs WHERE DeviceId = '" + deviceId + "' ORDER BY ValidFrom DESC");
+                        string sql = sb.ToString();
+                        log.LogInformation("trying to execute SQL : " + sql + "\n");
+
+                        log.LogInformation("result: \n");
+                        using (SqlCommand command = new SqlCommand(sql, connection))
                         {
-                            while (reader.Read())
+                            using (SqlDataReader reader = command.ExecuteReader())
                             {
-                                result = reader.GetString(0);
-                                log.LogInformation("result: " + result);
+                                while (reader.Read())
+                                {
+                                    result = reader.GetString(0);
+                                    log.LogInformation("result: " + result);
+                                }
                             }
                         }
                     }
+                    return new OkObjectResult(result);
                 }
-                return new OkObjectResult(result);
+                else
+                {
+                    return new BadRequestObjectResult("Please pass the DeviceId on the query string");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return new BadRequestObjectResult("Please pass the DeviceId on the query string");
+                log.LogError(ex.Message);
+                log.LogError(ex.StackTrace);
             }
+            return new BadRequestResult();
         }
     }
 }
