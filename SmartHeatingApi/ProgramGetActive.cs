@@ -65,8 +65,8 @@ namespace SmartHeatingApi
             {
                 log.LogError(ex.Message);
                 log.LogError(ex.StackTrace);
+                throw new Exception("Exception", ex);
             }
-            return new BadRequestResult();
         }
     }
 }
