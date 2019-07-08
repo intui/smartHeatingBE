@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SmartHeatingApi.Models;
+using System.Data.SqlClient;
 
 namespace SmartHeatingApi
 {
@@ -22,7 +23,13 @@ namespace SmartHeatingApi
 
             string sensorId = req.Query["sensorId"];
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            using (SqlConnection connection = Helper.AzureSQLServerHelper.Connection)
+            {
+                log.LogInformation("SQL connection established.");
+                log.LogInformation(connection.DataSource);
+            }
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             sensorId = sensorId ?? data?.sensorId;
             SensorData retVal = new SensorData { SensorDataID = 0, SensorID = 007, TSCreated = DateTime.UtcNow, SensorDataType = 1, Unit = "°C", Value = 23.2M, ValueText = "Temperature" } ;

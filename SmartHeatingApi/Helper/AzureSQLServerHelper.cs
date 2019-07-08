@@ -12,11 +12,13 @@ namespace SmartHeatingApi.Helper
         {
             get
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = Environment.GetEnvironmentVariable("DataSource");
-                builder.UserID = Environment.GetEnvironmentVariable("UserID");
-                builder.Password = Environment.GetEnvironmentVariable("Password");
-                builder.InitialCatalog = Environment.GetEnvironmentVariable("InitialCatalog");
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder
+                {
+                    DataSource = Environment.GetEnvironmentVariable("DataSource"),
+                    UserID = Environment.GetEnvironmentVariable("UserID"),
+                    Password = Environment.GetEnvironmentVariable("Password"),
+                    InitialCatalog = Environment.GetEnvironmentVariable("InitialCatalog")
+                };
                 return new SqlConnection(builder.ConnectionString);
             }
         }
