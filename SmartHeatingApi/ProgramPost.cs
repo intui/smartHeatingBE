@@ -35,7 +35,7 @@ namespace SmartHeatingApi
                     return new BadRequestResult();
                 }
 
-                using (SqlConnection connection = Helper.AzureSQLServerHelper.connection)
+                using (SqlConnection connection = Helper.AzureSQLServerHelper.Connection)
                 {
                     log.LogInformation("\nSQL Query started");
                     log.LogTrace("program submitted: \n" + JsonConvert.SerializeObject(program));
