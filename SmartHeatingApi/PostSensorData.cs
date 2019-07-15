@@ -13,10 +13,10 @@ using System.Globalization;
 
 namespace SmartHeatingApi
 {
-    public static class SensorDataPost
+    public static class PostSensorData
     {
         [HttpPost]
-        [FunctionName("SensorDataPost")]
+        [FunctionName("PostSensorData")]
         public static async Task<IActionResult> RunPost(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log)
@@ -35,7 +35,6 @@ namespace SmartHeatingApi
                     log.LogError("Error deserializing Object: " + requestBody);
                     return new BadRequestResult();
                 }
-
                 using (SqlConnection connection = Helper.AzureSQLServerHelper.Connection)
                 {
                     log.LogInformation("\nSQL Query started");
@@ -45,7 +44,7 @@ namespace SmartHeatingApi
                     connection.Open();
                     StringBuilder sb = new StringBuilder();
                     sb.Append("INSERT INTO SensorData (sensorID, tsCreated, SensorDataType, unit, value, valueText) VALUES(");
-                    sb.Append(sensordata.SensorID.ToString() + ", ");
+                    sb.Append("'" + sensordata.SensorID.ToString() + "', ");
                     sb.Append("'" + sensordata.TSCreated.ToUniversalTime().ToString() + "'" + ", ");
                     sb.Append("'" + sensordata.SensorDataType + "'" + ", ");
                     sb.Append("'" + sensordata.Unit + "'" + ", ");

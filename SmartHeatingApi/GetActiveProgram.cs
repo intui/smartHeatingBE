@@ -13,9 +13,9 @@ using System.Globalization;
 
 namespace SmartHeatingApi
 {
-    public static class ProgramGetActive
+    public static class GetActiveProgram
     {
-        [FunctionName("ProgramGetActive")]
+        [FunctionName("GetActiveProgram")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
@@ -37,7 +37,7 @@ namespace SmartHeatingApi
                         var culture = CultureInfo.CreateSpecificCulture("en-US");
                         connection.Open();
                         StringBuilder sb = new StringBuilder();
-                        sb.Append("SELECT TOP 1 ProgramContent FROM Programs WHERE DeviceId = '" + deviceId + "' ORDER BY ValidFrom DESC");
+                        sb.Append("SELECT TOP 1 ProgramContent FROM Programs WHERE DeviceId = '" + deviceId + "' AND Active = 1 ORDER BY ValidFrom DESC");
                         string sql = sb.ToString();
                         log.LogInformation("trying to execute SQL : " + sql + "\n");
 

@@ -7,7 +7,7 @@ namespace SmartHeatingApi.Models
     public class SensorData
     {
         public int SensorDataID { get; set; }
-        public int SensorID { get; set; }
+        public Guid SensorID { get; set; }
         public DateTime TSCreated { get; set; }
         public int SensorDataType { get; set; } // ToDo: make Enum
         public string Unit { get; set; }
@@ -19,7 +19,7 @@ namespace SmartHeatingApi.Models
 /*
  * create table SensorData (
 	SensorDataID  INTEGER PRIMARY KEY, --Autoincrement in SQLLite
-	SensorID INT not null,
+	SensorID uniqueidentifier not null,
 	TSCreated datetime not null DEFAULT CURRENT_TIMESTAMP,
 	SensorDataType int,
 	Unit nvarchar(50),
