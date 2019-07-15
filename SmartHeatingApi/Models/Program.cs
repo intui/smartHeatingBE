@@ -13,7 +13,7 @@ namespace SmartHeatingApi.Models
         public DateTime ValidFrom { get; set; }
         public DateTime ValidTo { get; set; }
         public string ProgramContent { get; set; }
-        public int DeviceID { get; set; }
+        public Guid DeviceID { get; set; }
         public DateTime TSCreated { get; set; }
         public DateTime TSUpdated { get; set; }
 
@@ -29,7 +29,7 @@ namespace SmartHeatingApi.Models
 	[ValidFrom] [date] NULL,
 	[ValidTo] [date] NULL,
 	[Program] [nvarchar](MAX) NULL,
-	[DeviceID] [int] NOT NULL,
+	[DeviceID] [uniqueidentifier] NOT NULL,
 	[TSCreated] [datetime] NOT NULL,
 	[TSUpdated] [datetime] NOT NULL,
 */
