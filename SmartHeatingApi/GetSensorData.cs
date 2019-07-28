@@ -12,6 +12,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 
 namespace SmartHeatingApi
 {
@@ -41,6 +42,7 @@ namespace SmartHeatingApi
                     log.LogInformation("trying to execute SQL : " + sql + "\n");
 
                     log.LogInformation("result: \n");
+
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -56,7 +58,7 @@ namespace SmartHeatingApi
                                         SensorID = (Guid)reader["SensorID"],
                                         TSCreated = (DateTime)reader["TSCreated"],
                                         Unit = (string)reader["Unit"],
-                                        Value = (decimal) Convert.ToSingle(reader["Value"]),
+                                        Value = (decimal) Convert.ToSingle(reader["Value"], new CultureInfo("en-US")),
                                         ValueText = (string)reader["ValueText"]
                                     });
                                 }
